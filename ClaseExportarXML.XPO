@@ -1,0 +1,598 @@
+﻿Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: CLS
+
+; Microsoft Dynamics AX Class: PWExportOrderFileXML unloaded
+; --------------------------------------------------------------------------------
+  CLSVERSION 1
+  
+  CLASS #PWExportOrderFileXML
+    PROPERTIES
+      Name                #PWExportOrderFileXML
+      Origin              #{A92832D8-BD31-4DF9-AF3D-93A3ECDCF380}
+    ENDPROPERTIES
+    
+    METHODS
+      SOURCE #changeInterfaceStatus
+        #private void changeInterfaceStatus()
+        #{
+        #    ;
+        #
+        #    ttsBegin;
+        #
+        #    PWUpgradeInterfaceStatus::sentStatus(purchTable);
+        #
+        #    ttsCommit;
+        #}
+      ENDSOURCE
+      SOURCE #classDeclaration
+        #//DPR 24 oct 2014 GAP_WS03_GAP_WS03 - Create XML order file
+        #class PWExportOrderFileXML
+        #{
+        #    XMLDocument                 xmlDoc;
+        #    XMLNode                     LCGOrderRequestNode;
+        #
+        #    PWOrdersFileXMLTable        ordersFileXMLTable;
+        #    PurchTable                  purchTable;
+        #
+        #    //Order Header
+        #    #define.LCGOrderRequest('LCGOrderRequest')
+        #    #define.LCOrderHeader('LCORderHeader')
+        #    #define.SubCode('SubCode')
+        #    #define.SubOrderNo('SubOrderNo')
+        #    #define.SubCustomerNo('SubCustomerNo')
+        #    #define.SubCustomerName('SubCustomerName')
+        #    #define.SubDeliveryName('SubDeliveryName')
+        #    #define.SubDeliveryAddress('SubDeliveryAddress')
+        #    #define.SubDeliveryAddress2('SubDeliveryAddress2')
+        #    #define.SubDeliveryTownCity('SubDeliveryTownCity')
+        #    #define.SubDeliveryCounty('SubDeliveryCounty')
+        #    #define.SubDeliveryPostCode('SubDeliveryPostCode')
+        #    #define.SubDeliveryCountry('SubDeliveryCountry')
+        #    #define.SubDeliveryContactNo('SubDeliveryContactNo')
+        #    #define.SubDeliveryEmail('SubDeliveryEmail')
+        #    #define.SubPhoneNo('SubPhoneNo')
+        #    #define.SubYourReference('SubYourReference')
+        #    #define.SubExternalDocNo('SubExternalDocNo')
+        #    #define.SubCurrencyCode('SubCurrencyCode')
+        #    #define.SubOrderDate('SubOrderDate')
+        #    #define.SubRequestedDeliveryDate('SubRequestedDeliveryDate')
+        #    #define.SubShippingAgentCode('SubShippingAgentCode')
+        #    #define.SubShippingAgentService('SubShippingAgentService')
+        #    #define.SubShippingServicesFilter('SubShippingServicesFilter')
+        #    #define.SubOrderPriority('SubOrderPriority')
+        #    #define.SubOrderDivision('SubOrderDivision')
+        #    #define.SubCompleteShipment('SubCompleteShipment')
+        #    #define.SubOrderBalances('SubOrderBalances')
+        #    #define.SubAllocateOrder('SubAllocateOrder')
+        #    #define.SubImmediateAllocation('SubImmediateAllocation')
+        #    #define.SubHoldOrderForPayment('SubHoldOrderForPayment')
+        #    #define.SubResponsibilityCentre('SubResponsibilityCentre')
+        #    #define.SubOrderCreatedBy('SubOrderCreatedBy')
+        #    #define.SubWebOrder('SubWebOrder')
+        #    #define.ASNRequired('ASNRequired')
+        #    #define.RequestedDeliveryTimeFrom('RequestedDeliveryTimeFrom')
+        #    #define.RequestedDeliveryTimeUntil('RequestedDeliveryTimeUntil')
+        #    #define.SubSenderILN('SubSenderILN')
+        #    #define.SubDeliveryILN('SubDeliveryILN')
+        #    #define.SubCustomerILN('SubCustomerILN')
+        #    #define.SubInvoiceILN('SubInvoiceILN')
+        #    #define.SubSellToCustomerName('SubSellToCustomerName')
+        #    #define.SubSellToCustomerName2('SubSellToCustomerName2')
+        #    #define.SubSellToAddress('SubSellToAddress')
+        #    #define.SubSellToAddress2('SubSellToAddress2')
+        #    #define.SubSellToCity('SubSellToCity')
+        #    #define.SubSellToCounty('SubSellToCounty')
+        #    #define.SubSellToPostcode('SubSellToPostcode')
+        #    #define.SubSellToCountry('SubSellToCountry')
+        #    #define.SubExtraInformation('SubExtraInformation')
+        #
+        #
+        #    //Order header comment
+        #    #define.OrderHeaderComment("OrderHeaderComment")
+        #    #define.HdrComment("HdrComment")
+        #    #define.HdrCommNo("HdrCommNo")
+        #    #define.HdrCommLineNo("HdrCommLineNo")
+        #    #define.HdrCommPrintWS("HdrCommPrintWS")
+        #    #define.HdrCommPrintPN("HdrCommPrintPN")
+        #
+        #    //Order Line
+        #    #define.LCGOrderLine('LCGOrderLine')
+        #    #define.SubOrderLineType('SubOrderLineType')
+        #    #define.SubOrderLineLineNo('SubOrderLineLineNo')
+        #    #define.SubOrderLineNo('SubOrderLineNo')
+        #    #define.SubOrderLineDescription('SubOrderLineDescription')
+        #    #define.SubOrderLineDescription2('SubOrderLineDescription2')
+        #    #define.SubOrderLineCrossReference('SubOrderLineCrossReference')
+        #    #define.SubOrderLineQty('SubOrderLineQty')
+        #    #define.SubOrderLineQtyToShip('SubOrderLineQtyToShip')
+        #    #define.SubSalesPrice('SubSalesPrice')
+        #    #define.SubSalesPriceCurrCode('SubSalesPriceCurrCode')
+        #    #define.SubTicketPrice('SubTicketPrice')
+        #    #define.SubUseVirtualLoc('SubUseVirtualLoc')
+        #    #define.SubZeroPriceAllowed('SubZeroPriceAllowed')
+        #    #define.SubRetailPrice('SubRetailPrice')
+        #    #define.SubReserveLine('SubReserveLine')
+        #    #define.SubLCBarcode('SubLCBarcode')
+        #    #define.SubEDICustOrderLineNo('SubEDICustOrderLineNo')
+        #
+        #    //Order line comment
+        #    #define.OrderLineComment("OrderLineComment")
+        #    #define.LineComment("LineComment")
+        #    #define.LineCommNo("LineCommNo")
+        #    #define.LineCommLineNo("LineCommLineNo")
+        #    #define.LineCommDocLineNo("LineCommDocLineNo")
+        #    #define.LineCommPrintWS("LineCommPrintWS")
+        #    #define.LineCommPrintPN("LineCommPrintPN")
+        #
+        #    //Order Update
+        #    #define.LCGOrderNotification("LCGOrderNotification")
+        #    #define.LCGOrderUpdate("LCGOrderUpdate")
+        #    #define.Type("Type")
+        #    #define.SourceNo("SourceNo")
+        #    #define.OrderDeleted("OrderDeleted")
+        #    #define.OrderArchived("OrderArchived")
+        #    #define.RequestedDeliveryDate("RequestedDeliveryDate")
+        #    #define.SendBackOrder("SendBackOrder")
+        #    #define.PaymentOutstanding("PaymentOutstanding")
+        #}
+      ENDSOURCE
+      SOURCE #createXMLFile
+        #private void createXMLFile()
+        #{
+        #    str xmlFileName;
+        #    ;
+        #
+        #    // write XML to file
+        #    xmlFileName = strFmt(@"%1\OrderFile_%2.XML", CustParameters::find().PWOriginOrderFilePath,
+        #                                                 purchTable.PurchId);
+        #
+        #    new FileIoPermission(xmlFileName, 'rw').assert();
+        #
+        #    if (System.IO.File::Exists(xmlFileName))
+        #        System.IO.File::Delete(xmlFileName);
+        #
+        #    AifUtil::saveTextToFile(xmlFileName, xmlDoc.toString(), enum2str(AifEncoding::UTF16));
+        #    //xmlDoc.save(xmlFileName);
+        #
+        #    CodeAccessPermission::revertAssert();
+        #
+        #    PWExportOrderFileXML::moveFiles(xmlFileName);
+        #}
+      ENDSOURCE
+      SOURCE #parmPurchTable
+        #public PurchTable parmPurchTable(PurchTable _purchTable = purchTable)
+        #{
+        #    purchTable = _purchTable;
+        #    return purchTable;
+        #}
+      ENDSOURCE
+      SOURCE #run
+        #public void run()
+        #{
+        #    ;
+        #
+        #    // create XML
+        #    //xmlDoc = XMLDocument::newBlank('UTF-16');
+        #    xmlDoc = new XMLDocument();
+        #
+        #    xmlDoc.appendChild(xmlDoc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-16" standalone="no"'));
+        #
+        #    this.xmlSeralizeTable();
+        #
+        #    this.createXMLFile();
+        #
+        #    this.changeInterfaceStatus();
+        #}
+      ENDSOURCE
+      SOURCE #xmlSeralizeLine
+        #private void xmlSeralizeLine()
+        #{
+        #    XMLNode     LCGOrderLineNode;
+        #    XMLNode     elementString;
+        #
+        #    XmlElement  orderLineCommentNode;
+        #
+        #    PWOrdersFileXMLLine     ordersFileXMLLine;
+        #    ;
+        #
+        #    while select ordersFileXMLLine
+        #        index hint RefRecIdx
+        #        where ordersFileXMLLine.RefTableRecId == ordersFileXMLTable.RecId
+        #    {
+        #        LCGOrderLineNode = LCGOrderRequestNode.appendChild(xmlDoc.createElement(#LCGOrderLine));
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineType));
+        #            if (ordersFileXMLLine.SubOrderLineType)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineType);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineLineNo));
+        #            if (ordersFileXMLLine.SubOrderLineLineNo)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineLineNo);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineNo));
+        #            if (ordersFileXMLLine.SubOrderLineNo)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineNo);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineDescription));
+        #            if (ordersFileXMLLine.SubOrderLineDescription)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineDescription);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineDescription2));
+        #            if (ordersFileXMLLine.SubOrderLineDescription2)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineDescription2);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineCrossReference));
+        #            if (ordersFileXMLLine.SubOrderLineCrossReference)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineCrossReference);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineQty));
+        #            if (ordersFileXMLLine.SubOrderLineQty)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineQty);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubOrderLineQtyToShip));
+        #            if (ordersFileXMLLine.SubOrderLineQtyToShip)
+        #                elementString.text(ordersFileXMLLine.SubOrderLineQtyToShip);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubSalesPrice));
+        #            if (ordersFileXMLLine.SubSalesPrice)
+        #                elementString.text(ordersFileXMLLine.SubSalesPrice);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubSalesPriceCurrCode));
+        #            if (ordersFileXMLLine.SubSalesPriceCurrCode)
+        #                elementString.text(ordersFileXMLLine.SubSalesPriceCurrCode);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubTicketPrice));
+        #            if (ordersFileXMLLine.SubTicketPrice)
+        #                elementString.text(ordersFileXMLLine.SubTicketPrice);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubUseVirtualLoc));
+        #            if (ordersFileXMLLine.SubUseVirtualLoc)
+        #                elementString.text(ordersFileXMLLine.SubUseVirtualLoc);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubZeroPriceAllowed));
+        #            if (ordersFileXMLLine.SubZeroPriceAllowed)
+        #                elementString.text(ordersFileXMLLine.SubZeroPriceAllowed);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubRetailPrice));
+        #            if (ordersFileXMLLine.SubRetailPrice)
+        #                elementString.text(ordersFileXMLLine.SubRetailPrice);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubReserveLine));
+        #            if (ordersFileXMLLine.SubReserveLine)
+        #                elementString.text(ordersFileXMLLine.SubReserveLine);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubLCBarcode));
+        #            if (ordersFileXMLLine.SubLCBarcode)
+        #                elementString.text(ordersFileXMLLine.SubLCBarcode);
+        #            elementString = LCGOrderLineNode.appendChild(xmlDoc.createElement(#SubEDICustOrderLineNo));
+        #            if (ordersFileXMLLine.SubEDICustOrderLineNo)
+        #                elementString.text(ordersFileXMLLine.SubEDICustOrderLineNo);
+        #    }
+        #
+        #    orderLineCommentNode = LCGOrderRequestNode.appendChild(xmlDoc.createElement(#OrderLineComment));
+        #        orderLineCommentNode.setAttribute(#LineComment, '');
+        #        orderLineCommentNode.setAttribute(#LineCommNo, '');
+        #        orderLineCommentNode.setAttribute(#LineCommLineNo, '0');
+        #        orderLineCommentNode.setAttribute(#LineCommDocLineNo, '0');
+        #        orderLineCommentNode.setAttribute(#LineCommprintWS, '0');
+        #        orderLineCommentNode.setAttribute(#LineCommPrintPN, '0');
+        #}
+      ENDSOURCE
+      SOURCE #xmlSeralizeTable
+        #private void xmlSeralizeTable()
+        #{
+        #    XMLNode     LCOrderHeaderNode;
+        #    XMLNode     elementString;
+        #
+        #    XmlElement  orderHeaderCommentNode;
+        #    ;
+        #
+        #    ordersFileXMLTable = PWOrdersFileXMLTable::find(purchTable.PurchId);
+        #
+        #    LCGOrderRequestNode = xmlDoc.appendChild(xmlDoc.createElement(#LCGOrderRequest));
+        #        LCOrderHeaderNode = LCGOrderRequestNode.appendChild(xmlDoc.createElement(#LCOrderHeader));
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubCode));
+        #            if (ordersFileXMLTable.SubCode)
+        #                elementString.text(ordersFileXMLTable.SubCode);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubOrderNo));
+        #            if (ordersFileXMLTable.SubOrderNo)
+        #                elementString.text(ordersFileXMLTable.SubOrderNo);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubCustomerNo));
+        #            if (ordersFileXMLTable.SubCustomerNo)
+        #                elementString.text(ordersFileXMLTable.SubCustomerNo);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubCustomerName));
+        #            if (ordersFileXMLTable.SubCustomerName)
+        #                elementString.text(ordersFileXMLTable.SubCustomerName);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryName));
+        #            if (ordersFileXMLTable.SubDeliveryName)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryName);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryAddress));
+        #            if (ordersFileXMLTable.SubDeliveryAddress)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryAddress);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryAddress2));
+        #            if (ordersFileXMLTable.SubDeliveryAddress2)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryAddress2);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryTownCity));
+        #            if (ordersFileXMLTable.SubDeliveryTownCity)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryTownCity);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryCounty));
+        #            if (ordersFileXMLTable.SubDeliveryCounty)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryCounty);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryPostCode));
+        #            if (ordersFileXMLTable.SubDeliveryPostCode)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryPostCode);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryCountry));
+        #            if (ordersFileXMLTable.SubDeliveryCountry)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryCountry);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryContactNo));
+        #            if (ordersFileXMLTable.SubDeliveryContactNo)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryContactNo);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryEmail));
+        #            if (ordersFileXMLTable.SubDeliveryEmail)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryEmail);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubPhoneNo));
+        #            if (ordersFileXMLTable.SubPhoneNo)
+        #                elementString.text(ordersFileXMLTable.SubPhoneNo);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubYourReference));
+        #            if (ordersFileXMLTable.SubYourReference)
+        #                elementString.text(ordersFileXMLTable.SubYourReference);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubExternalDocNo));
+        #            if (ordersFileXMLTable.SubExternalDocNo)
+        #                elementString.text(ordersFileXMLTable.SubExternalDocNo);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubCurrencyCode));
+        #            if (ordersFileXMLTable.SubCurrencyCode)
+        #                elementString.text(ordersFileXMLTable.SubCurrencyCode);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubOrderDate));
+        #            if (ordersFileXMLTable.SubOrderDate)
+        #                elementString.text(ordersFileXMLTable.SubOrderDate);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubRequestedDeliveryDate));
+        #            if (ordersFileXMLTable.SubRequestedDeliveryDate)
+        #                elementString.text(ordersFileXMLTable.SubRequestedDeliveryDate);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubShippingAgentCode));
+        #            if (ordersFileXMLTable.SubShippingAgentCode)
+        #                elementString.text(ordersFileXMLTable.SubShippingAgentCode);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubShippingAgentService));
+        #            if (ordersFileXMLTable.SubShippingAgentService)
+        #                elementString.text(ordersFileXMLTable.SubShippingAgentService);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubShippingServicesFilter));
+        #            if (ordersFileXMLTable.SubShippingServicesFilter)
+        #                elementString.text(ordersFileXMLTable.SubShippingServicesFilter);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubOrderPriority));
+        #            if (ordersFileXMLTable.SubOrderPriority)
+        #                elementString.text(ordersFileXMLTable.SubOrderPriority);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubOrderDivision));
+        #            if (ordersFileXMLTable.SubOrderDivision)
+        #                elementString.text(ordersFileXMLTable.SubOrderDivision);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubCompleteShipment));
+        #            if (ordersFileXMLTable.SubCompleteShipment)
+        #                elementString.text(ordersFileXMLTable.SubCompleteShipment);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubOrderBalances));
+        #            if (ordersFileXMLTable.SubOrderBalances)
+        #                elementString.text(ordersFileXMLTable.SubOrderBalances);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubAllocateOrder));
+        #            if (ordersFileXMLTable.SubAllocateOrder)
+        #                elementString.text(ordersFileXMLTable.SubAllocateOrder);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubImmediateAllocation));
+        #            if (ordersFileXMLTable.SubImmediateAllocation)
+        #                elementString.text(ordersFileXMLTable.SubImmediateAllocation);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubHoldOrderForPayment));
+        #            if (ordersFileXMLTable.SubHoldOrderForPayment)
+        #                elementString.text(ordersFileXMLTable.SubHoldOrderForPayment);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubResponsibilityCentre));
+        #            if (ordersFileXMLTable.SubResponsibilityCentre)
+        #                elementString.text(ordersFileXMLTable.SubResponsibilityCentre);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubOrderCreatedBy));
+        #            if (ordersFileXMLTable.SubOrderCreatedBy)
+        #                elementString.text(ordersFileXMLTable.SubOrderCreatedBy);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubWebOrder));
+        #            if (ordersFileXMLTable.SubWebOrder)
+        #                elementString.text(ordersFileXMLTable.SubWebOrder);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#ASNRequired));
+        #            if (ordersFileXMLTable.ASNRequired)
+        #                elementString.text(ordersFileXMLTable.ASNRequired);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#RequestedDeliveryTimeFrom));
+        #            if (ordersFileXMLTable.RequestedDeliveryTimeFrom)
+        #                elementString.text(ordersFileXMLTable.RequestedDeliveryTimeFrom);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#RequestedDeliveryTimeUntil));
+        #            if (ordersFileXMLTable.RequestedDeliveryTimeUntil)
+        #                elementString.text(ordersFileXMLTable.RequestedDeliveryTimeUntil);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSenderILN));
+        #            if (ordersFileXMLTable.SubSenderILN)
+        #                elementString.text(ordersFileXMLTable.SubSenderILN);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubDeliveryILN));
+        #            if (ordersFileXMLTable.SubDeliveryILN)
+        #                elementString.text(ordersFileXMLTable.SubDeliveryILN);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubCustomerILN));
+        #            if (ordersFileXMLTable.SubCustomerILN)
+        #                elementString.text(ordersFileXMLTable.SubCustomerILN);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubInvoiceILN));
+        #            if (ordersFileXMLTable.SubInvoiceILN)
+        #                elementString.text(ordersFileXMLTable.SubInvoiceILN);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToCustomerName));
+        #            if (ordersFileXMLTable.SubSellToCustomerName)
+        #                elementString.text(ordersFileXMLTable.SubSellToCustomerName);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToCustomerName2));
+        #            if (ordersFileXMLTable.SubSellToCustomerName2)
+        #                elementString.text(ordersFileXMLTable.SubSellToCustomerName2);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToAddress));
+        #            if (ordersFileXMLTable.SubSellToAddress)
+        #                elementString.text(ordersFileXMLTable.SubSellToAddress);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToAddress2));
+        #            if (ordersFileXMLTable.SubSellToAddress2)
+        #                elementString.text(ordersFileXMLTable.SubSellToAddress2);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToCity));
+        #            if (ordersFileXMLTable.SubSellToCity)
+        #                elementString.text(ordersFileXMLTable.SubSellToCity);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToCounty));
+        #            if (ordersFileXMLTable.SubSellToCounty)
+        #                elementString.text(ordersFileXMLTable.SubSellToCounty);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToPostcode));
+        #            if (ordersFileXMLTable.SubSellToPostcode)
+        #                elementString.text(ordersFileXMLTable.SubSellToPostcode);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubSellToCountry));
+        #            if (ordersFileXMLTable.SubSellToCountry)
+        #                elementString.text(ordersFileXMLTable.SubSellToCountry);
+        #            elementString = LCOrderHeaderNode.appendChild(xmlDoc.createElement(#SubExtraInformation));
+        #            if (ordersFileXMLTable.SubExtraInformation)
+        #                elementString.text(ordersFileXMLTable.SubExtraInformation);
+        #
+        #
+        #
+        #        orderHeaderCommentNode = LCGOrderRequestNode.appendChild(xmlDoc.createElement(#OrderHeaderComment));
+        #            orderHeaderCommentNode.setAttribute(#HdrComment, '');
+        #            orderHeaderCommentNode.setAttribute(#HdrCommNo, '');
+        #            orderHeaderCommentNode.setAttribute(#HdrCommLineNo, '0');
+        #            orderHeaderCommentNode.setAttribute(#HdrCommprintWS, '0');
+        #            orderHeaderCommentNode.setAttribute(#HdrCommPrintPN, '0');
+        #
+        #    this.xmlSeralizeLine();
+        #}
+      ENDSOURCE
+      SOURCE #main
+        #public static void main(Args    _args)
+        #{
+        #    PWExportOrderFileXML        exportOrderFileXML;
+        #    ;
+        #
+        #    exportOrderFileXML = new PWExportOrderFileXML();
+        #
+        #    exportOrderFileXML.run();
+        #}
+      ENDSOURCE
+      SOURCE #moveFiles
+        #public static server void moveFiles(Filename     _origFileName)
+        #{
+        #    System.Diagnostics.ProcessStartInfo     psi;
+        #    System.Exception                        ex;
+        #
+        #    Set         permissionSet;
+        #
+        #    Filename    getFileName;
+        #    Filename    toFileName;
+        #    str         instruction;
+        #
+        #    #File
+        #    ;
+        #
+        #    try
+        #    {
+        #        if (System.IO.File::Exists(_origFileName))
+        #        {
+        #            getFileName = System.IO.Path::GetFileName(_origFileName);
+        #
+        #            toFilename  = strFmt(@"%1\%2", CustParameters::find().PWCopyOrderFilePath,
+        #                                           getFileName);
+        #
+        #            permissionSet =  new Set(Types::Class);
+        #
+        #            permissionSet.add(new FileIOPermission(toFilename, #io_write));
+        #            permissionSet.add(new InteropPermission(InteropKind::ClrInterop));
+        #
+        #            CodeAccessPermission::assertMultiple(permissionSet);
+        #
+        #            psi = new System.Diagnostics.ProcessStartInfo();
+        #            psi.set_WindowStyle(System.Diagnostics.ProcessWindowStyle::Hidden);
+        #
+        #            instruction = strFmt("use %1 /USER:%2 %3", toFilename, CustParameters::find().PWUser, CustParameters::find().PWPassword);
+        #
+        #            psi.set_FileName("net");
+        #            psi.set_Arguments(instruction);
+        #
+        #            System.Diagnostics.Process::Start(psi);
+        #
+        #            if (System.IO.File::Exists(toFilename))
+        #                System.IO.File::Delete(toFileName);
+        #
+        #            System.IO.File::Move(_origFileName,
+        #                                 toFilename);
+        #        }
+        #
+        #        CodeAccessPermission::revertAssert();
+        #    }
+        #    catch(Exception::CLRError)
+        #    {
+        #        // BP Deviation documented
+        #        ex = ClrInterop::getLastException();
+        #
+        #        while (ex != null)
+        #        {
+        #            error(ex.ToString());
+        #
+        #            ex = ex.get_InnerException();
+        #        }
+        #
+        #        throw error(strFmt("%1", ex));
+        #    }
+        #}
+      ENDSOURCE
+      SOURCE #xmlSeralizeOrderUpdate
+        #//DPR 28 oct 2014 GAP_WS03_GAP_WS03 - Create XML order update file
+        #public static void xmlSeralizeOrderUpdate(RecId    _refRecId)
+        #{
+        #    XMLDocument     xmlDoc;
+        #    XMLNode         LGCOrderNotificationNode;
+        #    XMLNode         LGCOrderUpdateNode;
+        #    XMLNode         elementString;
+        #
+        #    PWOrdersUpdateFileXMLTable      ordersUpdateFileXMLTable;
+        #
+        #    Num             sourceNo;
+        #
+        #    str     xmlFileName;
+        #    ;
+        #
+        #    //xmlDoc = XMLDocument::newBlank('UTF-16');
+        #    xmlDoc = new XMLDocument();
+        #
+        #    xmlDoc.appendChild(xmlDoc.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-16" standalone="no"'));
+        #
+        #    ordersUpdateFileXMLTable = PWOrdersUpdateFileXMLTable::findRecId(_refRecId);
+        #
+        #    LGCOrderNotificationNode = xmlDoc.appendChild(xmlDoc.createElement(#LCGOrderNotification));
+        #        LGCOrderUpdateNode = LGCOrderNotificationNode.appendChild(xmlDoc.createElement(#LCGOrderUpdate));
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#Type));
+        #            if (ordersUpdateFileXMLTable.Type)
+        #                elementString.text(ordersUpdateFileXMLTable.Type);
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#SubCode));
+        #            if (ordersUpdateFileXMLTable.SubCode)
+        #                elementString.text(ordersUpdateFileXMLTable.SubCode);
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#SourceNo));
+        #
+        #            sourceNo = PWOrdersFileXMLTable::find(ordersUpdateFileXMLTable.SourceNo).PurchIdNAV;
+        #
+        #            if (!sourceNo)
+        #                sourceNo = ordersUpdateFileXMLTable.SourceNo;
+        #
+        #            if (sourceNo)
+        #                elementString.text(sourceNo);
+        #
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#OrderDeleted));
+        #            if (ordersUpdateFileXMLTable.OrderDeleted)
+        #                elementString.text(ordersUpdateFileXMLTable.OrderDeleted);
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#OrderArchived));
+        #            if (ordersUpdateFileXMLTable.OrderArchived)
+        #                elementString.text(ordersUpdateFileXMLTable.OrderArchived);
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#RequestedDeliveryDate));
+        #            if (ordersUpdateFileXMLTable.RequestedDeliveryDate)
+        #                elementString.text(ordersUpdateFileXMLTable.RequestedDeliveryDate);
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#SendBackOrder));
+        #            if (ordersUpdateFileXMLTable.SendBackOrder)
+        #                elementString.text(ordersUpdateFileXMLTable.SendBackOrder);
+        #            elementString = LGCOrderUpdateNode.appendChild(xmlDoc.createElement(#PaymentOutstanding));
+        #            if (ordersUpdateFileXMLTable.PaymentOutstanding)
+        #                elementString.text(ordersUpdateFileXMLTable.PaymentOutstanding);
+        #
+        #    xmlFileName = strFmt(@"%1\OrderUpdate_%2_%3_%4.XML", CustParameters::find().PWOriginOrderUpdateFilePath,
+        #                                                         ordersUpdateFileXMLTable.SourceNo,
+        #                                                         date2str(systemDateGet(), 321, 2, 0, 2, 0, 4),
+        #                                                         timeNow());
+        #
+        #    new FileIoPermission(xmlFileName, 'rw').assert();
+        #
+        #    AifUtil::saveTextToFile(xmlFileName, xmlDoc.toString(), enum2str(AifEncoding::UTF16));
+        #    //xmlDoc.save(xmlFileName);
+        #
+        #    CodeAccessPermission::revertAssert();
+        #
+        #    PWExportOrderFileXML::moveFiles(xmlFileName);
+        #
+        #    if (ordersUpdateFileXMLTable.OrderDeleted == "1")
+        #    {
+        #        PWUpgradeInterfaceStatus::cancelCompletedStatus(PurchTable::find(ordersUpdateFileXMLTable.SourceNo));
+        #    }
+        #    else if (ordersUpdateFileXMLTable.OrderArchived == "1")
+        #    {
+        #        PWUpgradeInterfaceStatus::partialCanceledStatus(PurchTable::find(ordersUpdateFileXMLTable.SourceNo));
+        #    }
+        #}
+      ENDSOURCE
+    ENDMETHODS
+  ENDCLASS
+
+***Element: END
